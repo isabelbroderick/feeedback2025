@@ -195,7 +195,7 @@
   letter-spacing: 0.3px;
 }
 
-/* Leaderboard card (centered under heading) */
+
 #displayLeaders{
   width: 84%;
   max-width: 760px;
@@ -214,7 +214,7 @@
 
 
 
-/* Ordered list styling */
+
 #displayLeaders ol{
   width: 100%;
   margin: 0;
@@ -223,7 +223,6 @@
   text-align: left;
 }
 
-/* Each row: name left, score right */
 #displayLeaders li{
   display: flex;
   justify-content: space-between;
@@ -250,10 +249,10 @@
   text-align: right;
 }
 #backButton {
-    position: fixed;       /* keep it in one place on screen */
-    top: 1vh;             /* distance from top */
-    left: 1vw;            /* distance from left */
-    z-index: 1000;         /* make sure it’s above everything */
+    position: fixed;      
+    top: 1vh;             
+    left: 1vw;            
+    z-index: 1000;        
     background: black;
     color: #fff;
     font-family: Arial, sans-serif;
@@ -266,10 +265,10 @@
 }
 
 #signOutButton {
-    position: fixed;       /* keep it in one place on screen */
-    top: 1vh;             /* distance from top */
-    left: 5vw;            /* distance from left */
-    z-index: 1000;         /* make sure it’s above everything */
+    position: fixed;     
+    top: 1vh;           
+    left: 5vw;            
+    z-index: 1000;         
     background: black;
     color: #fff;
     font-family: Arial, sans-serif;
@@ -399,28 +398,28 @@ function checkAuthState() {
 
 
 const loadLeaderboard = async () => {
-  const displayLeaders = document.getElementById("displayLeaders");
+  const displayLeaders = document.getElementById("displayLeaders"); //get DisplayLeaders div from the DOM
 
 
   try {
     const leaderboardRef = collection(db, "level8Leaderboard");
-    const q = query(leaderboardRef, orderBy("score", "desc"), limit(10));
+    const q = query(leaderboardRef, orderBy("score", "desc"), limit(10)); // get the top 10 results
     const snapshot = await getDocs(q);
 
-    if (snapshot.empty) {
+    if (snapshot.empty) { // if not data avaliable 
       displayLeaders.innerHTML = "<p>No scores yet.</p>";
       return;
     }
 
     let html = "<ol>";
-    snapshot.forEach(docSnap => {
+    snapshot.forEach(docSnap => { // for each score 
       const data = docSnap.data();
-      html += `<li><span class="name">${data.name}</span><span class="score">${data.score}</span></li>`;
+      html += `<li><span class="name">${data.name}</span><span class="score">${data.score}</span></li>`; //display name and score 
     });
     html += "</ol>";
 
     displayLeaders.innerHTML = html;
-  } catch (err) {
+  } catch (err) { // catch error 
     console.error("loadLeaderboard error:", err);
     displayLeaders.innerHTML = "<p>Failed to load leaderboard.</p>";
   }
