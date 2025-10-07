@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walking Boss</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background-image: url('office.png');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    #boss {
+      position: absolute;
+      bottom: 10px;
+      right: -200px; /* start off-screen right */
+      height: 48vh;
+      width: auto;
+    }
+
+    #bubble {
+      position: absolute;
+      bottom: 50vh;
+      right: 50%;
+      transform: translateX(50%);
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 1.2em;
+      font-family: Arial, sans-serif;
+      display: none; /* hidden until boss stops */
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    }
+
+    #bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 15px 15px 0;
+      border-style: solid;
+      border-color: white transparent transparent transparent;
+    }
+
+    #mc {
+      position: absolute;
+    }
+    #mc img {
+      height: 50vh;
+      width: auto;
+    }
+    #computerButton {
+  position: absolute;
+  top: 50vh;  /* adjust based on where your computer is */
+  left: 56vw; /* adjust this to match your in-game computer's location */
+  transform: translate(-50%, -50%);
+  padding: 10px 15px;
+  font-size: 1em;
+  display: none; /* initially hidden, shown only when MC is close */
+  z-index: 10;
+}
+
+
+.menubar {
+      position: absolute; 
+      top: 0;
+      left: 0;
+      width: 94.5%;
+      background-color: rgba(92, 100, 102, 0.8);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+
+
+
+    /* Custom styling for the computer popup */
+    #computerPopup {
+      background-color: #4d4c4c;  /* Grey computer screen */
+      color: #030303;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #000000;
+      width: 50vw;
+      height: 60vh;
+      padding-top: 2cm;
+      padding-bottom: 2cm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+
+    #computerScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Adjust the document box so it fills the available vertical space */
+    #documentBox {
+      background-color: #ffffff;
+      width: 45%;
+      height: 95%;       /* Fill the container's content area */
+      padding: 20px;
+      overflow-y: auto;  /* Enable scrolling when content overflows */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      margin: 0 auto;    /* Center horizontally */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* Start content at top */
+      align-items: center;
+    }
+
+    /* ---------- UPDATED .page RULE BELOW ---------- */
+    .page {
+      width: 100%;
+      /* Remove height:100% so it can grow taller than its parent */
+      display: none;             
+      flex-direction: column;
+      justify-content: flex-start; /* Start at top, so overflow scrolls downward */
+      align-items: center;
+    }
+    #page1 {
+      display: flex;
+    }
+    #nextButton,#nextButton2,#nextButton3,#nextButton4,#nextButton5  {
+      align-self: flex-start;   /* push to left */
+      margin-top: auto;         /* push to bottom */
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    
+    #backButton {
+      align-self: flex-start;
+      margin-top: auto;
+      padding: 8px 12px;
+      font-size: 14px;
+      display: none; /* hidden until page2 is visible */
+    }
+    #rightText, #rightText2,#rightText3 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align left */
+  
+}
+    
+#options1, #options2,#options3 { 
+    justify-content: space-between;
+      align-items: center;
+}
+.popup {
+      display: block;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 2px solid black;
+      z-index: 9999;
+    }
+    
+    .popup-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    #userDisplay {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* white with 80% opacity */
+  padding: 5px;
+
+}
+
+
+
+
+  </style>
+</head>
+<body>
+  <div id="userDisplay">
+  <h2 id="userHeading">user</h2><button id="switchUserButton">swich User</button>
+</div>
+  <div id="mc">
+    <img src="mc.png" alt="MC Character" id="mc1" />
+  </div>
+
+  <img id="boss" src="boss.png" alt="Boss Character">
+
+  <div id="bubble">
+    <div id="bubbleText">
+      Congrats on being hired as our new intern!
+      <br> I'm here to show you the ropes and get you adjusted to your new role.
+    </div>
+    <button id="nextButtonSpeech">Next</button>
+    </div>
+<!-- Button on the computer (hidden until MC is close) -->
+<button id="computerButton" >click-here</button>
+
+<!-- Computer popup with “monitor” and menubar + document -->
+<div id="computerPopup" style="display: none;">
+  <div class="menubar">
+    <div class="buttons">
+      <button id="closeComputerPopup">Close</button> 
+      <button class="Button">edit</button>
+    </div>
+    <div class="sign">
+      <button class="button">more...</button>
+    </div>
+  </div>
+
+  <div id="computerScreen">
+    <div id="documentBox">
+      <!-- Page 1 -->
+      <div id="page1" class="page">
+        <h2>Unfinished Article</h2>
+        <p>
+          Yay, you found it! <br><br>
+          In journalism, <strong>bias</strong> means presenting the news in a way that favors one side or opinion. This can happen through the words a reporter chooses, what facts they include or leave out, and even who they interview.<br><br>
+          To spot bias, ask yourself: <em>Whose voices are being heard? What facts are missing? Are opinions being reported as facts?</em> Good journalists aim to show all sides fairly, so that all the facts are there allowing readers to make up their own minds.
+        </p>
+        <button id="nextButton">Next page</button>
+      </div>
+
+      <!-- Page 2 (hidden until “Next page” is clicked) -->
+      <div id="page2" class="page">
+        <h2>Unfinished Article Continued</h2>
+        <p>
+          In news reporting, bias can show up in many ways the most obvious of which is tone. this normally eqates to a <em>positive</em> or <em>negative</em> bias:<br><br>
+        
+          <strong>Positive bias:</strong> Stories that emphasize the good side of events. You’ll see language that highlights achievements, hopeful outcomes, or inspiring stories—sometimes making situations appear better than they really are.<br><br>
+        
+          <strong>Negative bias:</strong> Articles that focus on problems, risks, or failures. The language often stresses conflict, danger, or shortcomings—sometimes making events seem worse or more alarming than they actually are.<br><br>
+        
+          go to the next page for a quiz on political bias <br><br>
+        </p>
+        
+        <button id="nextButton2">Next page</button>  <button id="backButton">Back</button> 
+      
+      </div>
+      <div id="page3" class="page">
+        <h2>Example Article</h2>
+        <h3> Can u identiy what bias this article has?</h3>
+   
+
+        <p> 
+            Fast food chains continue to flood communities with cheap, unhealthy meals, prioritizing profit over public health. These corporations aggressively target children with manipulative advertising and contribute to rising obesity rates, all while underpaying workers and dodging environmental responsibilities.
+        </p>
+
+        <div id="options1"> 
+          <button id="wrong1"> Pos </button> 
+          <button id="right1"> Neg </button>
+        </div>
+        <p id="wrongText" style="display: none;"> wrong, try again :) </p>
+
+        <div id="rightText" style="display: none;">
+        <p > Correct, lets try another </p>
+        <br> <button id="nextButton3"> Next</button>
+        </div>
+    
+        
+    
+    
+        </div>
+
+        <!-- NEW: Page 4 — Positive-bias example -->
+        <div id="page4" class="page">
+          <h2>Example Article — Positive Bias</h2>
+          <h3>Can u identify what bias this article has?</h3>
+
+          <p>
+            The local tech company has transformed our city — creating thousands of well-paid jobs, revitalising downtown, and supporting local schools with generous donations. Their innovations make everyday life easier and show how private business can lift whole communities.
+          </p>
+
+          <div id="options2">
+            <!-- For this article the correct answer is Pos -->
+            <button id="right2"> Pos </button>
+            <button id="wrong2"> Neg </button>
+          </div>
+
+          <p id="wrongText2" style="display: none;"> wrong, try again :) </p>
+
+          <div id="rightText2" style="display: none;">
+            <p> Correct — this article shows a positive slant. </p>
+            <br> <button id="nextButton4"> Next</button>
+          </div>
+        </div>
+
+        <!-- NEW: Page 5 — Negative-bias example -->
+        <div id="page5" class="page">
+          <h2>Example Article — Negative Bias</h2>
+          <h3>Can u identify what bias this article has?</h3>
+
+          <p>
+            Politicians continue to ignore the struggling middle class, passing tax breaks for the wealthy while cutting vital services. Their empty promises and careless policies leave families worse off and deepen inequality across the region.
+          </p>
+
+          <div id="options3">
+            <!-- For this article the correct answer is Neg -->
+            <button id="wrong3"> Pos </button>
+            <button id="right3"> Neg </button>
+          </div>
+
+          <p id="wrongText3" style="display: none;"> wrong, try again :) </p>
+
+          <div id="rightText3" style="display: none;">
+            <p> Correct — this article shows a negative slant. </p>
+            <br> <button id="nextButton5"> Finish </button>
+          </div>
+        </div>
+
+    </div>
+    
+  </div>
+
+  
+</div>
+
+
+  </div>
+
+  <div style="display: none;" id="doneDiv" class="popup">
+    <div class="popup-content">
+      <h1>congratulations</h1>
+      <br>
+      <h3>you've passed the first stage in becoming a journalist. As a reward, you've earned a hat. YIPPE! <br><br>  head to the next room to continue your jounery</h3>
+      <br>   <button id="closeDone">Close</button> 
+    </div>
+  </div>
+
+
+  <script  type="module" src="java1.js">
+     
+  </script>
+
+
+  
+
+  
+  
+
+</body>
+</html>

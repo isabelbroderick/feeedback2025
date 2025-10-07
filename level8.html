@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: lightblue;
+  }
+  #sky {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  #mc {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  #mc img {
+    height: 150px;
+  }
+  .falling {
+    position: absolute;
+    top: 0;
+    height: 50px;
+  }
+  #popup .page {
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+
+
+    border: 2px solid black;
+  }
+  #startScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(128, 128, 128, 0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001 /* above everything */
+  }
+
+  #startButton {
+    padding: 20px 40px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+   /* Custom styling for the computer popup */
+   #computerPopup{
+    background-color: #4d4c4c;
+      color: #030303;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #000000;
+      width: 50vw;
+      height: 60vh;
+      padding-top: 2cm;
+      padding-bottom: 2cm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+
+    #computerScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Adjust the document box so it fills the available vertical space */
+    #documentBox {
+      background-color: #ffffff;
+      width: 45%;
+      height: 95%;       /* Fill the container's content area */
+      padding: 20px;
+      overflow-y: auto;  /* Enable scrolling when content overflows */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      margin: 0 auto;    /* Center horizontally */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* Start content at top */
+      align-items: center;
+    }
+
+    #computer-button {
+      position: absolute;
+      top: 50vh;
+      left: 56vw;
+      z-index: 1000;
+      padding: 10px 15px;
+      font-size: 16px;
+      display: none;
+    }
+    .menubar {
+      position: absolute; 
+      top: 0;
+      left: 0;
+      width: 94.5%;
+      background-color: rgba(92, 100, 102, 0.8);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .dot {
+  height: 25px;
+  width: 25px;
+  background-color:black;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 2px
+  ; /* spacing between dots */
+}
+
+#NewsPopup, #notebookPopup, #computerPopup, #fake {
+    display: none;  /* hide all popups by default */
+}
+
+#notePopup {
+    
+  flex-direction: column;
+      background-color: #fbffcb;  
+      color: #030303;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #000000;
+     
+      width: 50vw;
+      height: 60vh;
+      padding-top: 2cm;
+      padding-bottom: 2cm;
+      padding-left: 1cm;
+      padding-right: 1cm;
+      
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+    #documentBoxNote {
+  background: repeating-linear-gradient(
+    to bottom,
+    #fbffcb,
+    #fbffcb 30px,   /* light yellow height */
+  #eff6a4 30px,   /* start of darker line */
+  #eff6a4 32px    /* end of darker line */
+  );
+  padding-top: 30px; 
+  padding-bottom: 20px;
+ padding-left: 45px;
+ padding-right: 45px;
+  line-height: 32px; /* Match with the line spacing */
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  flex-grow: 1; /* fill notebook vertically */
+  height: auto; /* remove height 100%, let flex do the work */
+  overflow-y: auto;
+  font-size: 20px;
+}
+    #NewsPopup {
+    
+    flex-direction: column;
+        background-color: #fbffcb; 
+        color: #030303;
+        font-family: 'Courier New', monospace;
+        border: 3px solid #000000;
+       
+        width: 50vw;
+        height: 60vh;
+        padding-top: 2cm;
+        padding-bottom: 2cm;
+        padding-left: 1cm;
+        padding-right: 1cm;
+       
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+      }
+
+    #documentBoxNews {
+  background: repeating-linear-gradient(
+    to bottom,
+    #fbffcb,
+    #fbffcb 30px,   /* light yellow height */
+  #eff6a4 30px,   /* start of darker line */
+  #eff6a4 32px    /* end of darker line */
+  );
+  padding-top: 30px; 
+  padding-bottom: 20px;
+ padding-left: 45px;
+ padding-right: 45px;
+  line-height: 32px; /* Match with the line spacing */
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  flex-grow: 1; /* fill notebook vertically */
+  height: auto; /* remove height 100%, let flex do the work */
+  overflow-y: auto;
+  font-size: 15px; 
+}
+.menubarNote {
+      position: absolute; 
+      top: 0;
+      left: 0;
+      width: 94.5%;
+      
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+#scrambleList {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 12px;
+    margin-top: 8px;
+  }
+
+  .note-item {
+    background: rgba(255,255,255,0.85);
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    cursor: grab;
+    user-select: none;
+    font-family: 'Courier New', monospace;
+    line-height: 1.4;
+  }
+
+  .note-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.98);
+  }
+
+  /* visual drop target hint */
+  .note-item.drop-target {
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.08) inset;
+  }
+  #fake {
+    background-color: #ffffff;
+  }
+
+  .headline-button {
+      display: block;
+      width: 90%;
+      margin: 10px auto;
+      padding: 14px 18px;
+      font-size: 14px;
+      font-family: 'Courier New', monospace;
+      background: #fffde7;
+      border: 2px solid #333;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+      transition: all 0.2s ease-in-out;
+    }
+    .headline-button:hover {
+      background: #fff59d;
+      transform: scale(1.02);
+    }
+    #userDisplay {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* white with 80% opacity */
+  padding: 5px;
+  z-index: 20000;
+
+}
+.popup {
+          
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: white;
+          padding: 20px;
+          border: 2px solid black;
+          z-index: 9999; /* Ensure popup appears on top of other elements */
+      }
+
+      .popup-content {
+          text-align: center;
+      max-height: 400px; /* Set a fixed height for the popup content */
+      overflow-y: auto; /* Enable vertical scrolling */
+      } 
+/* Grid styles */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  grid-auto-rows: minmax(100px, auto); /* Auto-sized rows */
+  gap: 10px; /* Gap between grid items */
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="sky">
+  <div id="userDisplay">
+    <h2 id="userHeading">user</h2><button id="switchUserButton">swich User</button>
+  </div> 
+  <div id="mc">
+    <img src="mc1.png" alt="MC Character" id="mc1" />
+  </div>
+  <div id="instructionsPopup" class="popup">
+    <div class="popup-content">
+        <h1>Instructions</h1>
+        <p>back to this again, this time its faster and harder.</p>
+        <div class="grid-container">
+            
+            <div class="grid-item">
+                <img src="computer.png" style="max-width: 50%;">
+            </div>
+            <div class="grid-item">
+                A computer: if you collide with the computer, you will have to identify left and right bias. If you get it right, +1 point.
+            </div>
+
+            <div class="grid-item">
+                <img src="notebook.png" style="max-width: 50%;">
+            </div>
+            <div class="grid-item">
+                A notebook: if you collide with the notebook, you will have to identify if a story is in the correct order. If you get it right, +1 point.
+            </div>
+            <div class="grid-item">
+              <img src="news.png" style="max-width: 50%;">
+          </div>
+          <div class="grid-item">
+            A newspaper: if you collide with the newspaper you will have to identify the best headline. If you get it right, +1 point.
+
+          </div>
+
+            <div class="grid-item">
+                <img src="fake.png" style="max-width: 50%;">
+            </div>
+            <div class="grid-item">
+                Symbolizes fake news — avoid at all costs.
+            </div>
+            
+
+        </div>
+        <button id="instructionsButton">Close</button>
+    </div>
+</div> 
+ 
+  
+
+  <h2 id="scoreDisplay">Score: 0</h2>
+  <h2 id="timerDisplay">Time: 30</h2>
+</div>
+<div id="startScreen">
+  <button id="startButton" > Start</button>
+</div>
+
+<div id="popup">
+  <div>
+  <div id="notebookPopup" class="page">
+    <div class="menubarNote">
+      <div class="menubarNote">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+
+         <span class="dot"></span>
+      </div>
+      </div>
+
+    <div id="documentBoxNote">
+   
+        <h2>notes</h2>
+        <h3 id="noteIntro"></h3>
+        <ul id="noteText"></ul>
+
+        <div id="buttons">
+          <button id="right" > right</button>    <button id="wrong"> wrong</button>
+        </div> 
+   
+      </div>
+      
+       
+        
+        </div>
+        </div>
+
+      
+  <div id="computerPopup" class="page">
+    <div class="menubar">
+      <div class="buttons">
+        <button >Close</button>
+        <button class="Button">edit</button>
+      </div>
+      <div class="sign">
+        <button class="button">more...</button>
+      </div>
+    </div>
+
+    <div id="computerScreen"> 
+      <div id="documentBox">
+      
+        <div>
+          <h2>Bias checker</h2>
+          <p id="computerText"></p>
+          
+          <button id="rightBias" > right</button>    <button id="leftBias"> Left</button> 
+        </div>
+
+  </div>
+</div>
+</div>
+  <div id="fake" class="page">
+    <h2>Fake Info</h2>  
+    <p>Uh-oh! You caught a fake! Always verify your sources before trusting them.</p>
+    <button id="fakeButton" > unpause</button>  
+  </div>
+</div>
+
+<div id="NewsPopup" class="page">
+    <div class="menubarNote">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  
+    <div id="documentBoxNews">
+      <p id="newsInfo">
+       
+      </p>
+  
+      <button class="headline-button">
+       
+      </button>
+      <button class="headline-button" >
+       
+      </button> 
+      <button class="headline-button" >
+       
+      </button>
+      <button class="headline-button" >
+        
+      </button>
+  
+    </div>
+  </div>
+  
+      
+       
+        
+        </div>
+        </div>
+
+
+<script type="module" src="java8.js">
+</script>
+
+</body>
+</html>

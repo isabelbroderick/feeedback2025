@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+ body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Courier New', monospace;
+}
+
+#background {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#background img#bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+#mc {
+  position: absolute;
+  z-index: 1001;
+  pointer-events: none;
+}
+#mc img {
+  height: 50vh;
+  width: auto;
+}
+
+/* DOCUMENT BOX STYLING */
+#documentBox {
+  background: repeating-linear-gradient(
+    to bottom,
+    #fbffcb,
+    #fbffcb 30px,
+    #eff6a4 30px,
+    #eff6a4 32px
+  );
+  padding: 1rem;
+  line-height: 1.8;
+  width: 100%;
+  box-sizing: border-box;
+
+  flex-grow: 1;
+  height: auto;
+  max-height: 80vh;
+}
+
+/* POPUP WINDOW */
+#notePopup {
+  flex-direction: column;
+  background-color: #fbffcb;
+  color: #030303;
+  font-family: 'Courier New', monospace;
+  border: 3px solid #000000;
+  font-size: 1rem;
+  width: 90%;
+  max-width: 600px;
+  height: auto;
+  max-height: 80vh;
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* GENERIC POPUP */
+.popup {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 2px solid black;
+  z-index: 9999;
+}
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* HIDDEN NOTE BUTTON */
+#noteButton {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 46%;
+  z-index: 1000;
+  padding: 10px 15px;
+  font-size: 16px;
+}
+
+/* MENUBAR */
+.menubar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 94.5%;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* BACK BUTTON */
+#backButton,
+#backButton2,
+#backButton3 {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 8px 12px;
+  font-size: 14px;
+  display: none;
+}
+#nextButton,
+#nextButton2,
+#nextButton3,
+#doneButton {
+  align-items: center;
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 8px 12px;
+  font-size: 14px;
+  
+}
+
+
+
+/* PAGES */
+.page {
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start; 
+  box-sizing: border-box;
+}
+#page1 {
+  display: flex;
+}
+
+/* DOTS */
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: black;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 2px;
+}
+
+/* HEADLINE BUTTONS */
+.headline-button {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto;
+  padding: 14px 18px;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+  background: #fffde7;
+  border: 2px solid #333;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+.headline-button:hover {
+  background: #fff59d;
+  transform: scale(1.02);
+}
+
+/* RESPONSIVE STYLES */
+@media (max-width: 600px) {
+  #notePopup {
+    width: 95%;
+    padding: 1rem;
+    max-height: 90vh;
+  }
+
+  .headline-button {
+    font-size: 0.9rem;
+    padding: 10px 14px;
+  }
+
+  .menubar {
+    flex-wrap: wrap;
+  }
+
+  #mc img {
+    height: 30vh;
+  }
+}
+
+
+#userDisplay {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* white with 80% opacity */
+  padding: 5px;
+  z-index: 20000;
+  position:absolute;
+
+}
+
+
+  </style>
+</head>
+<body>
+  <div id="userDisplay">
+    <h2 id="userHeading">user</h2><button id="switchUserButton">swich User</button>
+  </div>
+
+  <div id="mc">
+    <img src="mc1.png" alt="MC Character" id="mc1" />
+  </div>
+
+  <div id="background">
+    <img src="desk2.png" id="background" alt="Background" />
+  </div>
+  
+  
+  <button id="noteButton">click-here</button> 
+
+  <div id="notePopup" class="popup" style="display: none;">
+    <div class="menubar">
+      <div class="menubar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+
+    <div id="notebook">
+      <div id="documentBox">
+        
+        <!-- Page 1 -->
+        <div id="page1" class="page">
+          <h2>Headlines</h2>
+          <p>some headlines tell a more accurate story than others, pick the one that best fits the article</p>
+          <button id="nextButton">Next</button>
+        </div>
+        
+        <!-- Page 2 -->
+        <div id="page2" class="page">
+          <h2>notes puzzle</h2>
+          <p> Yesterday, the City Council voted 6–5 to approve a new $50 million sports stadium project. Supporters argue the development will boost the local economy and create jobs, while critics warn it could strain public finances and divert funds from essential services like healthcare and education. Construction is scheduled to begin early next year.</p>
+          <button class="headline-button" id="positive">New Stadium Project Promises Jobs and Economic Growth After Council Approval</button>
+          <button class="headline-button" id="correct">City Council Approves $50 Million Sports Stadium Project in Close Vote</button> 
+          <button class="headline-button" id="negative">Council Pushes Through Controversial $50 Million Stadium Despite Public Concerns</button>
+          <button class="headline-button" id="veryNegative">Taxpayers Forced to Fund $50 Million Stadium While Essential Services Are Neglected</button>
+          <button id="backButton">Back</button>
+          <p id="feedback"></p>
+          <button id="nextButton2">Next</button>
+        </div>
+
+        <!-- Page 3 -->
+        <div id="page3" class="page">
+          <h2>notes puzzle</h2>
+          <p> The city hospital has implemented a new AI-based triage system to streamline patient care. Supporters say the system will reduce waiting times and help staff prioritize critical cases. Critics worry that relying on AI could lead to mistakes, misdiagnoses, or unequal treatment for vulnerable patients. Hospital officials are monitoring the system closely to ensure safety and effectiveness.</p>
+          
+          <button class="headline-button" id="positive2">Hospital's New AI System Promises Faster, Smarter Patient Care</button>
+          <button class="headline-button" id="correct2">City Hospital Introduces AI Triage System, Officials Monitor Performance</button>
+          <button class="headline-button" id="negative2">Critics Warn AI Triage at Hospital Could Lead to Mistakes and Inequality</button>
+          <button class="headline-button" id="negative2">Patients at Risk: Hospital's AI Triage System Sparks Controversy</button>
+          
+          <button id="backButton2">Back</button>
+          <p id="feedback2"></p>
+          <button id="nextButton3">Next</button>
+        </div>
+        
+
+        <!-- Page 4 -->
+        <div id="page4" class="page">
+          <h2>notes puzzle</h2>
+          <p> Last night, the national rail service announced the launch of new high-speed trains expected to cut travel time between major cities by half. Officials claim the project will modernize infrastructure and attract more commuters to public transport. However, critics argue the program’s $80 billion cost could weigh heavily on taxpayers.</p>
+          <button class="headline-button" id="correct3"> new High-Speed Rail Project aims to help Travel Between Cities</button>
+          <button class="headline-button"id="negative3">Government spends $80 million on controversial new Train System</button>
+          <button class="headline-button" id="positive3">New High-Speed Trains Aim to Modernize Infrastructure and Reduce Travel Time</button>
+          <button class="headline-button" id="positive3">High-Speed Rail Expected to Boost Tourism and Local Economies</button>
+
+          <button id="backButton3">Back</button>
+          <p id="feedback3"></p>
+          <button id="doneButton">Done</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h1>welcome to level 5</h1>
+      <p> now that you have decied on your story you need to learn the impact of the headlines you use</p>
+      <button id="introPopupButton">Close</button>
+    </div>
+  </div>
+
+  <script  type="module" src="java5.js"></script>
+</body>
+</html>

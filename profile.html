@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Bowlby+One+SC&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap" rel="stylesheet">
+<style>
+    html, body {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #b4b9bc;
+        font-family: Arial;
+        overflow: hidden;
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        border: none;
+        outline: none;
+    }
+    #content_container {
+        width: 40vw;
+        height: 70vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #form_container {
+        width: 100%;
+        background-color: rgb(209, 218, 221);
+        box-shadow: 0 0 50px -20px #000;
+        border-radius: 2%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #form_header_container {
+        width: 100%;
+        padding: 20px;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #form_header {
+        font-size: 15px;
+        font-family: Arial, sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: white;
+    }
+    #form_content_container {
+        width: 100%;
+        flex: 1;
+        background-color: rgb(196, 202, 205);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #form_content_inner_container {
+        width: 75%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+    }
+    input {
+        width: 100%;
+        height: 40px;
+        padding-left: 10px;
+        margin-bottom: 20px;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        font-weight: 500;
+        color: #000;
+        font-size: 12px;
+        border-radius: 2%;
+    }
+    #button_container {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        margin-top: 5px;
+    }
+    #button_container button {
+        width: 45%;
+        height: 40px;
+        background: black;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        letter-spacing: 1px;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 2%;
+    }
+    #resetPasswordButton {
+        width: 100%;
+        height: 40px;
+        background: black;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        letter-spacing: 1px;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 2%;
+        margin-top: 10px;
+    }
+    #secretContent {
+        display: none;
+        width: 100%;
+        height: 100%;
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Profile Page CSS */
+    .navbar-top {
+        background-color: #fff;
+        color: #333;
+        box-shadow: 0px 4px 8px 0px grey;
+        height: 70px;
+        width: 100%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .title {
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+    }
+    .navbar-top ul {
+        list-style-type: none;
+        position: absolute;
+        right: 50px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+    .navbar-top ul li {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+    .navbar-top ul li a {
+        color: #333;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+    .main {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .main h2 {
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .main .card {
+        background-color: #fff;
+        border-radius: 18px;
+        box-shadow: 1px 1px 8px 0 grey;
+        padding: 50px;
+        margin-bottom: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    
+    }
+    .main .card table {
+  border: none;
+  font-size: 25px;
+  width: auto; /* don’t stretch full width */
+  font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+}
+
+.main .card table td {
+  padding: 5px 1px ; /* tighter spacing */
+  white-space: nowrap; /* keep number + stars on one line */
+}
+
+.score-with-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; /* small gap between number and stars */
+}
+
+.tile-stars {
+    padding-left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px; /* stars close together */
+}
+
+.tile-stars img {
+  width: 20px;
+  height: 20px;
+}
+
+.tile-stars button {
+    padding: 2px;
+   margin-left: 20px;
+}
+
+#signOutButton {
+    position: fixed;       /* keep it in one place on screen */
+    top: 1vh;             /* distance from top */
+    left: 5vw;            /* distance from left */
+    z-index: 1000;         /* make sure it’s above everything */
+    background: black;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+ #backButton {
+    position: fixed;       /* keep it in one place on screen */
+    top: 1vh;             /* distance from top */
+    left: 1vw;            /* distance from left */
+    z-index: 1000;         /* make sure it’s above everything */
+    background: black;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
+
+
+</style>
+</head>
+<body>
+ 
+<div id="content_container">
+  <button id="backButton" onclick="window.location.href='index.html'">Back</button>
+
+ 
+    <div id="form_container">
+        <div id="form_header_container">
+            <h2 id="form_header">Login / Sign Up</h2>
+        </div>
+        <div id="form_content_container">
+            <div id="form_content_inner_container">
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="password" placeholder="Password">
+                <div id="button_container">
+                    <button id="signUpButton">Sign Up</button>
+                    <button id="signInButton">Sign In</button>
+                </div>
+                <button id="resetPasswordButton">Reset Password</button>
+            </div>
+        </div>
+    </div>
+    <div id="secretContent">
+        <div class="navbar-top">
+            <div class="title"><h1>Profile</h1></div>
+        </div>
+        <button id="signOutButton">Sign Out</button> 
+        <button id="backButton">back</button>  
+
+        <div class="main">
+            <div class="card">
+                <div class="card-body">
+                    <table>
+                        <tbody>
+                            <tr>
+                              <td>Email:</td>
+                              
+                              <td id="emailDisplay"></td>
+                            </tr>
+                          </tbody>
+                    </table>
+                    <table>
+                          <p style="font-size: 20px; font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif;;"> HighScores</p>
+                          <tbody>
+                            
+                            <tr>
+                              <td>level4:</td>
+                           
+                              <td>
+                                <span class="score-with-stars">
+                                  <span id="level4HS"></span>
+                                  <span class="tile-stars">
+                                    <img id="level4Star1" src="star.png" alt="">
+                                    <img id="level4Star2" src="star.png" alt="">
+                                    <img id="level4Star3" src="star.png" alt="">
+                                  
+                                  </span>
+                                </span>
+                              </td>
+                            </tr>
+                          
+                            <tr>
+                              <td>level6:</td>
+                     
+                              <td>
+                                <span class="score-with-stars">
+                                  <span id="level6HS"></span>
+                                  <span class="tile-stars">
+                                    <img id="level6Star1" src="star.png" alt="">
+                                    <img id="level6Star2" src="star.png" alt="">
+                                    <img id="level6Star3" src="star.png" alt="">
+                                    
+                                  </span>
+                                </span>
+                              </td>
+                            </tr>
+                          
+                            <tr>
+                              <td>level8:</td>
+                            
+                              <td>
+                                <span class="score-with-stars">
+                                  <span id="level8HS"></span>
+                                  <span class="tile-stars">
+                                    <img id="level8Star1" src="star.png" alt="">
+                                    <img id="level8Star2" src="star.png" alt="">
+                                    <img id="level8Star3" src="star.png" alt="">
+                                    
+                                  </span>
+                                </span>
+                              </td>
+                            </tr>
+                          
+                            <tr>
+                              <td colspan="3" style="text-align:center;">
+                               
+                               
+                              </td>
+                            </tr>
+                          </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD5ejSYsZrL6UIXtC5aksOZuAvCC_UiGt4",
+    authDomain: "tech2025-2ad90.firebaseapp.com",
+    projectId: "tech2025-2ad90",
+    storageBucket: "tech2025-2ad90.appspot.com",
+    messagingSenderId: "80121578021",
+    appId: "1:80121578021:web:XXXXXXXXXXXX"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app); 
+
+
+const signUpButton = document.getElementById('signUpButton');
+const signInButton = document.getElementById('signInButton');
+const signOutButton = document.getElementById('signOutButton');
+const resetPasswordButton = document.getElementById('resetPasswordButton');
+
+const level4Star1 = document.getElementById("level4Star1");
+      const level4Star2 = document.getElementById("level4Star2");
+      const level4Star3 = document.getElementById("level4Star3");
+
+      const level6Star1 = document.getElementById("level6Star1");
+      const level6Star2 = document.getElementById("level6Star2");
+      const level6Star3 = document.getElementById("level6Star3");
+
+      const level8Star1 = document.getElementById("level8Star1");
+      const level8Star2 = document.getElementById("level8Star2");
+      const level8Star3 = document.getElementById("level8Star3");
+
+
+function showProfile(email){
+    document.getElementById('secretContent').style.display = 'block';
+    document.getElementById('form_container').style.display = 'none';
+    document.getElementById('emailDisplay').textContent = email || '';
+}
+
+//  sign up 
+
+signUpButton.addEventListener('click', async () => { // When user clicks the signUp button 
+    const email = document.getElementById('email').value; // get email input
+    const password = document.getElementById('password').value; // get password input
+    if(!email || !password){ alert("Fill all fields"); return; } // check both fields are filled 
+    try{
+        // create a new user in Firebase Auth
+        const userCredential = await auth.createUserWithEmailAndPassword(email,password); 
+        showProfile(email); // show user's profile after signup
+    }catch(e){ 
+        alert(e.message); // show error message
+    }
+});
+
+// sign in 
+signInButton.addEventListener('click', async () => { // When user clicks the signIp button 
+    const email = document.getElementById('email').value; // get email input
+    const password = document.getElementById('password').value;  // get password input
+    if (!email || !password) { alert("Fill all fields");return;} // check both fields are filled   
+
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);  // login user 
+        const user = userCredential.user
+      
+        showProfile(email); // show user's profile after signup
+
+        console.log("Signed in as:", user.uid);
+
+    } catch (error) { // // show error message 
+        console.error("Sign-in error:", error);
+        alert("Wrong email or password"); 
+    }
+});
+
+//  reset password 
+
+resetPasswordButton.addEventListener('click', async () => { // When user clicks reset password button
+    const email = document.getElementById('email').value; //// get email input 
+    if(!email){ alert("Enter email"); return; } // if email field is blank alert user
+    try{
+        await auth.sendPasswordResetEmail(email); // send reset email
+        alert("Reset email sent"); // notify user
+    }catch(e){ 
+        alert(e.message); // show error if sending fails
+    }
+});
+
+//sign Out 
+// When user clicks sign-out button
+signOutButton.addEventListener('click', async () => {
+    await auth.signOut(); // sign user out
+    document.getElementById('secretContent').style.display = 'none'; // hide secret content
+    document.getElementById('form_container').style.display = 'block'; // show login form
+    document.getElementById('emailDisplay').textContent = ''; // clear email display
+    document.getElementById('email').value = ''; // clear email input
+    document.getElementById('password').value = ''; // clear password input
+});
+
+// level 4 stars 
+
+// Set the visual appearance of level 4 stars
+function setLevel4StarsUI(starsCount) {
+  const s = Number(starsCount) || 0; // convert to number or 0 if invalid
+  const imgs = [level4Star1, level4Star2, level4Star3].filter(Boolean); //  put the star image elements into an array and remove any that are null
+  imgs.forEach((img, idx) => { // for each img
+    if (idx < s) { // fill stars that are earned 
+      img.style.opacity = "1"; 
+      img.style.filter = "grayscale(0)"; 
+    } else { // empty stars
+      img.style.opacity = "0.25"; 
+      img.style.filter = "grayscale(1)";
+    }
+  });
+}
+
+// Load level 4 stars from Firebase for a specific user
+async function loadLevel4Stars(uid) {
+  try {
+    const userRef = doc(db, "users", uid); // reference to user doc
+    const snap = await getDoc(userRef); // get user document
+    const data = snap.exists() ? snap.data() : {}; // get the data, otherwise empty
+
+    
+    const rawStars = (data.stars && (data.stars.level4 !== undefined)) ? data.stars.level4 : 0;  //  get the stored stars for level4 
+    const starsNumber = Number(rawStars) || 0; // ensure number
+
+    setLevel4StarsUI(starsNumber); // update star UI
+  } catch (err) { // log error 
+    console.error("loadLevel4Stars error:", err); 
+  }
+}
+
+//level 6 stars 
+// Set level 6 star appearance
+function setLevel6StarsUI(starsCount) {
+  const s = Number(starsCount) || 0; 
+  const imgs = [level6Star1, level6Star2, level6Star3].filter(Boolean); 
+  imgs.forEach((img, idx) => {
+    if (idx < s) { 
+      img.style.opacity = "1"; 
+      img.style.filter = "grayscale(0)"; 
+    } else { 
+      img.style.opacity = "0.25"; 
+      img.style.filter = "grayscale(1)"; 
+    }
+  });
+}
+
+// Load level 6 stars from Firebase
+async function loadLevel6Stars(uid) {
+  try {
+    const userRef = doc(db, "users", uid); 
+    const snap = await getDoc(userRef); 
+    const data = snap.exists() ? snap.data() : {}; 
+
+    const rawStars = (data.stars && (data.stars.level6 !== undefined)) ? data.stars.level6 : 0;
+    const starsNumber = Number(rawStars) || 0;
+
+    setLevel6StarsUI(starsNumber); 
+  } catch (err) {
+    console.error("loadLevel6Stars error:", err); 
+  }
+}
+
+// level 8 stars 
+// Set level 8 star appearance
+function setLevel8StarsUI(starsCount) {
+  const s = Number(starsCount) || 0; 
+  const imgs = [level8Star1, level8Star2, level8Star3].filter(Boolean); 
+  imgs.forEach((img, idx) => {
+    if (idx < s) { 
+      img.style.opacity = "1"; 
+      img.style.filter = "grayscale(0)"; 
+    } else { 
+      img.style.opacity = "0.25"; 
+      img.style.filter = "grayscale(1)"; 
+    }
+  });
+}
+
+// Load level 8 stars from Firebase
+async function loadLevel8Stars(uid) {
+  try {
+    const userRef = doc(db, "users", uid); 
+    const snap = await getDoc(userRef); 
+    const data = snap.exists() ? snap.data() : {}; 
+
+    const rawStars = (data.stars && (data.stars.level8 !== undefined)) ? data.stars.level8 : 0;
+    const starsNumber = Number(rawStars) || 0;
+
+    setLevel8StarsUI(starsNumber); 
+  } catch (err) {
+    console.error("loadLevel8Stars error:", err); 
+  }
+}
+
+
+
+
+
+// Get the highest score for a level from the user's document
+async function getHighScoreForLevel(uid, levelKey) {
+  try {
+    const userRef = doc(db, "users", uid); //  reference to user doc
+    const snap = await getDoc(userRef); // get user document
+    const data = snap.exists() ? snap.data() : {}; // get the data, otherwise empty
+
+    // Check if there are scores for this level
+    if (data.scores  && data.scores[levelKey].length) {  // check scores exsists and isnt empty 
+      const arr = data.scores[levelKey].map(entry => entry?.score || 0); // create an array of all scores for the level
+      return Math.max(...arr); // return highest
+    }
+
+    return 0; // no scores yet
+  } catch (err) {
+    console.error("getHighScoreForLevel error:", err);
+    return 0; // on error, return 0
+  }
+}
+
+
+// Load + display highs for level4, level6, level8
+async function loadAndDisplayLevelHighScores(uid) {
+  const el4 = document.getElementById("level4HS");
+  const el6 = document.getElementById("level6HS");
+  const el8 = document.getElementById("level8HS");
+
+
+// fetch high scores for levels 4, 6, and 8 at the same time
+  const [hs4, hs6, hs8] = await Promise.all([
+    getHighScoreForLevel(uid, "level4"),
+    getHighScoreForLevel(uid, "level6"),
+    getHighScoreForLevel(uid, "level8"),
+  ]);
+
+  // update the elements with the fetched high scores, if they exist 
+   el4.textContent = hs4;
+  el6.textContent = hs6;
+  el8.textContent = hs8;
+}
+
+
+
+// Function to load stars and high scores for the signed-in user
+function checkAuthState() {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // If user is signed in, load their stars and high scores
+      await loadLevel4Stars(user.uid);
+      await loadLevel6Stars(user.uid);
+      await loadLevel8Stars(user.uid);
+      await loadAndDisplayLevelHighScores(user.uid);
+    } else {
+      // If no user, show 0 stars for all levels
+      setLevel4StarsUI(0);
+      setLevel6StarsUI(0);
+      setLevel8StarsUI(0);
+    }
+  });
+}
+
+// Listen for Firebase authentication state changes
+auth.onAuthStateChanged(user => { 
+    if(user){
+        const email = user.email || ''; // get user email
+        console.log("Firebase: signed in as", user.uid, user.email); 
+        checkAuthState(); // load stars and high scores
+        showProfile(email); // update UI to show user profile
+    } else {
+        // No user signed in — show login form and hide secret content
+        document.getElementById('secretContent').style.display = 'none';
+        document.getElementById('form_container').style.display = 'block';
+    }
+});
+
+
+checkAuthState();
+
+
+</script>
+</body>
+</html>

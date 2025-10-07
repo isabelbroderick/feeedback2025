@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Levels — News Quest</title>
+  <style>
+    /* Simple pixel-y theme */
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: "Courier New", monospace;
+      background: url('cityback.jpeg') center/cover no-repeat;
+      overflow: hidden;
+      color: #fff;
+    }
+    #Levels {
+  display: none;
+} 
+    img { image-rendering: pixelated; }
+
+    /* Title */
+    #title {
+      position: absolute;
+      top: 4%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 72px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: #fff;
+      text-shadow: 3px 3px 0 #000;
+      margin: 0;
+      z-index: 2;
+    }
+
+    /* Grid */
+    .grid-container{
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      grid-auto-rows: 200px;
+      gap: 28px;
+      z-index: 1;
+      justify-items: center;
+      align-items: start;
+    }
+
+    .level-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    /* each tile is positioned so we can place stars inside it */
+    .grid-item {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 72px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(180deg,#5a5b73,#434457);
+      border: 6px solid #000;
+      box-shadow: 10px 10px 0 #000;
+      border-radius: 12px;
+      text-decoration: none;
+      user-select: none;
+      overflow: visible; /* show big stars that might overflow slightly */
+    }
+
+    .grid-item:active { transform: translateY(2px); }
+
+    /* stars placed inside the tile, centered near the top */
+    .tile-stars {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      pointer-events: none; /* decorative only */
+    }
+
+    .tile-stars img {
+      width: 56px;
+      height: 56px;
+      display: block;
+    }
+
+    /* mobile / small screens */
+    @media (max-width:700px){
+      #title { font-size: 36px; top: 6%; }
+      .grid-container{ grid-template-columns: repeat(3, 110px); grid-auto-rows: 110px; gap:12px; }
+      .grid-item{ width:110px; height:110px; font-size:36px; border-width:4px; box-shadow:6px 6px 0 #000; border-radius:8px; }
+      .tile-stars img { width:26px; height:26px; }
+      .tile-stars { top:6px; gap:6px; }
+    }
+
+    #content_container {
+  max-width: 400px;          /* instead of 30% */
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+    #form_container {
+        width: 100%;
+        background-color: rgb(209, 218, 221);
+        box-shadow: 0 0 50px -20px #000;
+        border-radius: 2%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #form_header_container {
+        width: 100%;
+        padding: 20px;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #form_header {
+        font-size: 15px;
+        font-family: Arial, sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: white;
+    }
+    #form_content_container {
+        width: 100%;
+        flex: 1;
+        background-color: rgb(196, 202, 205);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #form_content_inner_container {
+        width: 75%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+    }
+    input {
+        width: 100%;
+        height: 40px;
+        padding-left: 10px;
+        margin-bottom: 20px;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        font-weight: 500;
+        color: #000;
+        font-size: 12px;
+        border-radius: 2%;
+    }
+    #button_container {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        margin-top: 5px;
+    }
+    #button_container button {
+        width: 45%;
+        height: 40px;
+        background: black;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        letter-spacing: 1px;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 2%;
+    }
+    #resetPasswordButton {
+        width: 100%;
+        height: 40px;
+        background: black;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        letter-spacing: 1px;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 2%;
+        margin-top: 10px;
+    }
+    #authForm {
+  position: fixed;
+  inset: 0;                 /* fill viewport */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;             /* above Levels */
+}
+#backButton {
+    position: fixed;       /* keep it in one place on screen */
+    top: 1vh;             /* distance from top */
+    left: 1vw;            /* distance from left */
+    z-index: 1000;         /* make sure it’s above everything */
+    background: black;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
+#signOutButton {
+    position: fixed;       /* keep it in one place on screen */
+    top: 1vh;             /* distance from top */
+    left: 5vw;            /* distance from left */
+    z-index: 1000;         /* make sure it’s above everything */
+    background: black;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+
+
+ 
+</style> 
+</head>
+<body>
+  <button id="backButton" onclick="window.location.href='index.html'">Back</button>
+
+<div id="authForm"> 
+  <div id="content_container">
+    <div id="form_container">
+        <div id="form_header_container">
+            <h2 id="form_header">Login / Sign Up</h2>
+        </div>
+        <div id="form_content_container">
+            <div id="form_content_inner_container">
+               
+              <input type="email" placeholder="email" id="userEmail">
+              <input type="password" placeholder="password" id="userPassword">
+                <div id="button_container">
+                  <button id="signUpButton">Sign Up</button>
+                  <button id="signInButton">Sign In</button>
+                </div>
+                <button id="resetPasswordButton">Reset Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+<div id="Levels" >
+  <h1 id="title">Levels</h1>
+  <button id="signOutButton">Sign Out</button> 
+
+  <div class="grid-container">
+    <div  id="one"class="level-container">
+      <a  class="grid-item locked" href="level1.html">1</a>
+    </div>
+
+    <div  id="two"class="level-container">
+      <a class="grid-item" href="level2.html">2</a>
+    </div>
+
+    <div id="three"class="level-container">
+      <a class="grid-item" href="level3.html">3</a>
+    </div>
+
+    <div id="four" class="level-container">
+      <a class="grid-item" href="level4.html">
+        <!-- stars INSIDE the box -->
+        <div class="tile-stars" aria-hidden="true">
+          <img id="level4Star1" src="star.png" alt="">
+          <img id="level4Star2"src="star.png" alt="">
+          <img id="level4Star3" src="star.png" alt="">
+        </div>
+        4
+      </a>
+    </div>
+
+    <div id="five" class="level-container">
+      <a class="grid-item" href="level5.html">5</a>
+    </div>
+
+    <div id="six" class="level-container">
+      <a class="grid-item" href="level6.html">
+        <div class="tile-stars" aria-hidden="true">
+          <img id="level6Star1" src="star.png" alt="">
+          <img id="level6Star2"src="star.png" alt="">
+          <img id="level6Star3" src="star.png" alt="">
+        </div>
+        6
+      </a>
+    </div>
+
+    <div id="seven" class="level-container">
+      <a class="grid-item" href="level7.html">7</a>
+    </div>
+
+    <div id="eight" class="level-container">
+      <a class="grid-item" href="level8.html">
+        <div class="tile-stars" aria-hidden="true">
+          <img id="level8Star1" src="star.png" alt="">
+          <img id="level8Star2"src="star.png" alt="">
+          <img id="level8Star3" src="star.png" alt="">
+        </div>
+        8
+      </a>
+    </div>
+
+    <div class="level-container">
+      <a class="grid-item" href="level9.html">9</a>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="levels.js">
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+
+    #background {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Full-screen background image */
+    #background img#bg-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      z-index: 0;
+    }
+
+    /* MC character */
+    #mc {
+      position: absolute;
+      z-index: 1001;
+      pointer-events: none;
+    }
+    #mc img {
+      height: 50vh;
+      width: auto;
+    }
+    #documentBox {
+  background: repeating-linear-gradient(
+    to bottom,
+    #fbffcb,
+    #fbffcb 30px,   /* light yellow height */
+  #eff6a4 30px,   /* start of darker line */
+  #eff6a4 32px    /* end of darker line */
+  );
+  padding: 20px;
+  line-height: 32px; /* Match with the line spacing */
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  flex-grow: 1; /* fill notebook vertically */
+  height: auto; /* remove height 100%, let flex do the work */
+  overflow-y: auto;
+}
+   
+    #notePopup {
+    
+  flex-direction: column;
+      background-color: #fbffcb;  /* Grey computer screen */
+      color: #030303;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #000000;
+      font-size: 20px;
+      width: 50vw;
+      height: 70vh;
+      padding-top: 2cm;
+      padding-bottom: 2cm;
+      padding-left: 1cm;
+      padding-right: 1cm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+    
+    
+
+    /* Initial Instructions Popup */
+    .popup {
+      display: block;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 2px solid black;
+      z-index: 9999;
+      
+    }
+    .popup-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      max-height: 400px;
+    
+      overflow-y: auto;
+    }
+   
+   
+#noteButton {
+      position: absolute;
+      top: 50%;
+      left: 47%;
+      z-index: 1000;
+      padding: 10px 15px;
+      font-size: 16px;
+      display: none;
+
+    }
+   
+    .menubar {
+      position: absolute; 
+      top: 0;
+      left: 0;
+      width: 94.5%;
+      
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    #backButton {
+      align-self: flex-start;
+      margin-top: auto;
+      padding: 8px 12px;
+      font-size: 14px;
+      display: none; /* hidden until page2 is visible */
+    }
+    #finishButton {
+      align-self: flex-start;
+      margin-top: auto;
+      padding: 8px 12px;
+      font-size: 14px;
+      display: none; /* hidden until page2 is visible */
+    }
+    
+    .page {
+      width: 100%;
+      height: 60vh;
+      display: none;             
+      flex-direction: column;
+      justify-content: flex-start; /* Start at top, so overflow scrolls downward */
+      align-items: center;
+    }
+    #page1 {
+      display: flex;
+    }
+    .dot {
+  height: 25px;
+  width: 25px;
+  background-color:black;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 2px
+  ; /* spacing between dots */
+}
+
+#scrambleList {
+    min-height: 60vh;
+   
+    padding: 12px;
+    margin-top: 8px;
+  }
+
+  .note-item {
+    background: rgba(255,255,255,0.85);
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    cursor: grab;
+    user-select: none;
+    font-family: 'Courier New', monospace;
+    line-height: 1.4;
+  }
+
+  .note-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.98);
+  }
+
+  /* visual drop target hint */
+  .note-item.drop-target {
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.08) inset;
+  }
+  #userDisplay {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* white with 80% opacity */
+  padding: 5px;
+  position: absolute;
+
+}
+
+  </style>
+</head>
+<body>
+
+  <div id="userDisplay">
+    <h2 id="userHeading">user</h2><button id="switchUserButton">swich User</button>
+  </div>
+  <!-- MC character -->
+  <div id="mc">
+    <img src="mc1.png" alt="MC Character" id="mc1" />
+  </div>
+
+  <!-- Full-screen background + initially hidden objects -->
+
+    
+  <div id="background">
+    <img src="desk2.png" id="background" alt="Background" />
+  </div>
+  
+    <button id="noteButton">click-here</button> 
+
+    <div id="notePopup"class="popup" style="display: none;">
+      <div class="menubar">
+        <div class="menubar">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+
+           <span class="dot"></span>
+        </div>
+        </div>
+
+        
+      <div id="notebook">
+        <div id="documentBox">
+          <!-- Page 1 -->
+          <div id="page1" class="page">
+            <h2>notes</h2>
+            <p>
+             yourve found your eye whitness notes but there all a mess,  <br><br>
+             in order to properally report your story you need to what happend when, but your notes have all been jumbiled, you dont know who said what anymore, or what there refering to, 
+             you need to string the events together to create a story. 
+             
+            <button id="nextButton">Next page</button>
+          </div>
+          <div id="page2" class="page">
+            <h2>notes puzzle</h2>
+          
+            <ul id="scrambleList" aria-label="Scrambled notes" style="list-style:none; padding:0; margin:0;">
+              <!-- list items are created by JS -->
+            </ul>
+          
+            <div style="margin-top:12px; display:flex; gap:8px;">
+     
+              <button id="checkButton" >Check Order</button>
+            </div>
+            <p id="wrong" style="display: none;"> wrong, try again :) </p>
+            <p id="right" style="display: none;"> correct :) move on to the next level for another game</p> 
+          
+            <div style="margin-top:4px;">
+              <button id="backButton">Back</button>  <button  id="finishButton">finish</button>
+            </div>
+          </div>
+          
+      </div>
+     </div>
+    </div> 
+
+
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h1>sommething something figure out what the eye whitness was saying
+      </h3>
+      
+     
+      <button id="popupButton">Close</button>
+    </div>
+  </div>
+  
+  
+  <script  type="module"src="java3.js">
+   
+  </script>
+
+</body>
+</html>

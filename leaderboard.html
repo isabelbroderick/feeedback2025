@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Document</title>
+  <style>
+    :root {
+      --menubar-bg: rgba(92, 100, 102, 0.86);
+      --panel-bg: rgba(255, 255, 255, 0.92);
+      --accent: #ffd34d;
+      --dark: #111;
+      --pixel-border: 5px;
+      --ui-font: 'Courier New', monospace;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: url('cityback.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: var(--ui-font);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #signOutButton {
+  position: fixed;
+  top: 10px;      /* distance from the top */
+  left: 10px;     /* distance from the left */
+  z-index: 1000;  /* make sure it's above other content */
+  
+
+  ;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+
+  font-size: 12px;
+}
+
+#board{
+      width: 70vw;
+      max-width: var(--max-width);
+      height: 85vh;
+      background: var(--panel-bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border: 2px solid rgba(0,0,0,0.12);
+      padding: 28px;
+      box-sizing: border-box;
+
+      display:flex;
+      flex-direction:column;   /* stack heading then leaderboard */
+      align-items:center;      /* center children horizontally */
+      gap: 18px;
+      overflow: hidden;
+      text-align:center;
+    }
+
+    #board h1{
+      margin:0;
+      font-size: 2.4rem;
+      letter-spacing: .5px;
+      color: #111;
+    }
+
+
+
+    #authForm {
+  position: fixed;
+  inset: 0;                 /* fill viewport */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;             /* above Levels */
+}
+ /* mobile / small screens */
+ @media (max-width:700px){
+      #title { font-size: 36px; top: 6%; }
+      .grid-container{ grid-template-columns: repeat(3, 110px); grid-auto-rows: 110px; gap:12px; }
+      .grid-item{ width:110px; height:110px; font-size:36px; border-width:4px; box-shadow:6px 6px 0 #000; border-radius:8px; }
+      .tile-stars img { width:26px; height:26px; }
+      .tile-stars { top:6px; gap:6px; }
+    }
+
+    #content_container {
+  max-width: 400px;          /* instead of 30% */
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+    #form_container {
+        width: 100%;
+        background-color: rgb(209, 218, 221);
+        box-shadow: 0 0 50px -20px #000;
+        border-radius: 2%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #form_header_container {
+        width: 100%;
+        padding: 20px;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #form_header {
+        font-size: 15px;
+        font-family: Arial, sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: white;
+    }
+    #form_content_container {
+        width: 100%;
+        flex: 1;
+        background-color: rgb(196, 202, 205);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #form_content_inner_container {
+        width: 75%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+    }
+    input {
+        width: 100%;
+        height: 40px;
+        padding-left: 10px;
+        margin-bottom: 20px;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        font-weight: 500;
+        color: #000;
+        font-size: 12px;
+        border-radius: 2%;
+    }
+    #button_container {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        margin-top: 5px;
+    }
+    #button_container button {
+        width: 45%;
+        height: 40px;
+        background: black;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        letter-spacing: 1px;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 2%;
+    }
+    #resetPasswordButton {
+        width: 100%;
+        height: 40px;
+        background: black;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        letter-spacing: 1px;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 2%;
+        margin-top: 10px;
+    }
+
+    #board h1{
+      align-items: center;
+  margin: 0;
+  font-size: 40px;
+  color: #0b2b3b;
+  letter-spacing: 0.3px;
+}
+
+/* Leaderboard card (centered under heading) */
+#displayLeaders{
+  width: 84%;
+  max-width: 760px;
+  background-color: #acacac;
+  border-radius: 10px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  max-height: calc(85vh - 200px);
+  overflow-y: auto;
+}
+
+
+
+/* Ordered list styling */
+#displayLeaders ol{
+  width: 100%;
+  margin: 0;
+  padding-left: 1.1rem;
+  max-width: 640px;
+  text-align: left;
+}
+
+/* Each row: name left, score right */
+#displayLeaders li{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 6px;
+  border-bottom: 1px dashed rgba(0,0,0,0.04);
+  font-size: 22px;
+  color: #111;
+}
+
+#displayLeaders li:last-child{
+  border-bottom: none;
+}
+
+#displayLeaders li .name{
+  font-weight: 600;
+  color: #000000;
+}
+
+#displayLeaders li .score{
+  font-weight: 700;
+  color: #000000;
+  min-width: 48px;
+  text-align: right;
+}
+#backButton {
+    position: fixed;       /* keep it in one place on screen */
+    top: 1vh;             /* distance from top */
+    left: 1vw;            /* distance from left */
+    z-index: 1000;         /* make sure it’s above everything */
+    background: black;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
+#signOutButton {
+    position: fixed;       /* keep it in one place on screen */
+    top: 1vh;             /* distance from top */
+    left: 5vw;            /* distance from left */
+    z-index: 1000;         /* make sure it’s above everything */
+    background: black;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+
+  
+  </style>
+</head>
+<body>
+  <button id="backButton" onclick="window.location.href='index.html'">Back</button>
+
+    <div id="authForm"> 
+        <div id="content_container">
+          <div id="form_container">
+              <div id="form_header_container">
+                  <h2 id="form_header">Login / Sign Up</h2>
+              </div>
+              <div id="form_content_container">
+                  <div id="form_content_inner_container">
+                   
+                    <input type="email" placeholder="email" id="userEmail">
+                    <input type="password" placeholder="password" id="userPassword">
+                      <div id="button_container">
+                        <button id="signUpButton">Sign Up</button>
+                        <button id="signInButton">Sign In</button>
+                      </div>
+                      <button id="resetPasswordButton">Reset Password</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      </div>
+
+<div id="content">
+<button  id="signOutButton">Sign Out</button> 
+
+  <div id="board">
+   
+    <h1>leader Board</h1>
+    
+
+    <div id="displayLeaders"> </div>
+  </div>
+</div> 
+</body>
+
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+import {  getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, orderBy, limit  } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD5ejSYsZrL6UIXtC5aksOZuAvCC_UiGt4",
+    authDomain: "tech2025-2ad90.firebaseapp.com",
+    projectId: "tech2025-2ad90",
+    storageBucket: "tech2025-2ad90.appspot.com",
+    messagingSenderId: "80121578021",
+    appId: "1:80121578021:web:XXXXXXXXXXXX"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app); 
+
+
+// get input and button elements
+const userEmail = document.getElementById("userEmail"); // email input
+const userPassword = document.getElementById("userPassword"); // password input
+const authForm = document.getElementById("authForm"); // login/signup form
+const content = document.getElementById("content"); // conent container
+const signUpButton = document.getElementById("signUpButton"); // sign up button
+const signInButton = document.getElementById("signInButton"); // sign in button
+
+
+
+// Sign up 
+const userSignUp = async () => {
+  const signUpEmail = userEmail.value; // get input email value
+  const signUpPassword = userPassword.value; // get input password value
+  try {
+      await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword); // create account
+      alert("Your account has been created!"); // notify user
+  } catch(e){
+      alert(e.message); // show error
+  }
+}
+
+// sign in 
+const userSignIn = async () => {
+  const signInEmail = userEmail.value; // get input email value
+  const signInPassword = userPassword.value; // get input password value
+  try {
+     await signInWithEmailAndPassword(auth, signInEmail, signInPassword); // sign in
+  } catch (error) {
+    alert("wrong email or Password"); // error message
+  }
+}
+
+// check auth state and update UI
+function checkAuthState() {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      authForm.style.visibility = 'hidden'; // hide form
+      content.style.display = 'block'; // show levels
+      loadLeaderboard(); 
+      
+    } else {
+      authForm.style.visibility = 'visible'; // show form
+      content.style.display = 'none'; // hide levels
+   
+      
+    }
+  });
+} 
+
+
+
+const loadLeaderboard = async () => {
+  const displayLeaders = document.getElementById("displayLeaders");
+
+
+  try {
+    const leaderboardRef = collection(db, "level8Leaderboard");
+    const q = query(leaderboardRef, orderBy("score", "desc"), limit(10));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      displayLeaders.innerHTML = "<p>No scores yet.</p>";
+      return;
+    }
+
+    let html = "<ol>";
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      html += `<li><span class="name">${data.name}</span><span class="score">${data.score}</span></li>`;
+    });
+    html += "</ol>";
+
+    displayLeaders.innerHTML = html;
+  } catch (err) {
+    console.error("loadLeaderboard error:", err);
+    displayLeaders.innerHTML = "<p>Failed to load leaderboard.</p>";
+  }
+};
+
+
+
+
+
+
+
+// user sign out
+const userSignOut = async() => {
+  await signOut(auth); // sign out user
+}
+
+// check auth state on page load
+checkAuthState();
+
+// add event listeners
+signUpButton.addEventListener('click', userSignUp); // sign up
+signInButton.addEventListener('click', userSignIn); // sign in
+signOutButton.addEventListener('click', userSignOut); // sign out
+
+
+</script>
+</html>

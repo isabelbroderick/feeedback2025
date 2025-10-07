@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>game </title>
+  <style>
+    
+    body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+
+    #background {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    
+}
+    
+
+    /* Full-screen background image */
+    #background img#bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+    /* MC character */
+    #mc {
+      position: absolute;
+      z-index: 1001;
+      pointer-events: none;
+    }
+    #mc img {
+      height: 40vh;
+      width: auto;
+    }
+
+    
+    #photos, #notepad, #usb {
+      position: absolute;
+      z-index: 1000;
+     
+    }
+    #photos button
+    {
+  position: absolute;
+  top: 20px; /* change if you want it elsewhere */
+  left: 0; /* change if you want it elsewhere */
+  z-index: 1001; /* above the image */
+  pointer-events: auto; /* allow button to be clickable */
+  
+}
+    
+#notepad button
+{
+  position: absolute;
+  top: 50px; /* change if you want it elsewhere */
+  left: 25px; /* change if you want it elsewhere */
+  z-index: 1001; /* above the image */
+  pointer-events: auto; /* allow button to be clickable */
+}
+#usb button {
+  position: absolute;
+  top: 10px; /* change if you want it elsewhere */
+  left: 0; /* change if you want it elsewhere */
+  z-index: 1001; /* above the image */
+  pointer-events: auto; /* allow button to be clickable */
+}
+
+    /* Position of each object on the screen */
+    #photos {
+      top: 13%;
+      left: 20%;
+    }
+    #photos img {
+      width: auto;
+    }
+
+    #notepad {
+      top: 89%;
+      left: 84%;
+    }
+    #notepad img {
+      height: 14vh;
+      width: auto;
+    }
+
+    #usb {
+      top: 54%;
+      left: 65%;
+    }
+    #usb img {
+      height: 5vh !important;
+      width: auto;
+      display: block;
+    }
+
+    /* Initial Instructions Popup */
+    .popup {
+      display: block;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 2px solid black;
+      z-index: 9999;
+    }
+    .popup-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+   
+    #message {
+  position: absolute;
+  top: 13%;
+  left: 0.2%;
+  color: white; 
+  font-size: 1.5rem;
+  z-index: 2002; /* on top of everything else */
+  background-color: rgba(0, 0, 0, 0.5); /* optional, adds background for readability */
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+#photosButton, #notepadButton, #usbButton {
+  display: none; /* start hidden */
+}
+
+#userDisplay {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* white with 80% opacity */
+  padding: 5px;
+  z-index: 2000;   
+  position: absolute;
+}
+
+
+  </style>
+</head>
+<body>
+
+
+  <!-- MC character -->
+  <div id="mc">
+    <img src="mc1.png" alt="MC Character" id="mc1" />
+  </div>
+  <div id="message">Score: 0</div>
+ 
+  <!-- Full-screen background + initially hidden objects -->
+  <div id="background">
+    <img src="office2.png" id="bg-img" alt="Background" />
+  
+    <div id="userDisplay">
+      <h2 id="userHeading">user</h2>
+      <button id="switchUserButton">switch User</button>
+    </div>
+  </div>
+  
+    <!-- Photos (hidden until MC is near) -->
+    <div id="photos">
+      <img src="photos1.png" alt="Photos" />
+      <button  id="photosButton">find</button>
+    </div>
+
+    <!-- Notepad (hidden until MC is near) -->
+    <div id="notepad">
+      <button  id="notepadButton">find</button>
+      <img src="notepad.png" alt="Notepad" />
+   
+    </div>
+
+    <!-- USB (hidden until MC is near) -->
+    <div id="usb">
+      <img src="usb.png" alt="USB Stick" />
+      <button  id="usbButton">find</button>
+
+    </div>
+  </div>
+
+  <!-- Initial instructions popup -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h1>Congratulations on passing the first stage, now its time for a game</h1>
+      
+      <h3>
+        You fell asleep working last night and now you can’t find your evidence.  
+        Look around the room and find the:<br><br>
+        – Notepad with Eyewitness Notes<br>
+        – USB Stick with Interview Audio<br>
+        – Printed out Photos
+        Good luck!
+      </h3>
+      <p> hint: you have to be near the button to click it</p>
+
+     
+      <button id="introPopupButton">Close</button>
+    </div>
+  </div>
+
+  <div   style="display: none;" class="popup" id="donePopup"> 
+    <h2 > wow so quick, although you probably should clean this place. continue to the next room to use these objects to write your first story </h2>
+    <button id="doneButton" >Close</button>
+  </div>
+  <script type="module"  src="java2.js">
+   
+  </script>
+</body>
+</html>

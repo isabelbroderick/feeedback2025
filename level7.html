@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movable Image</title>
+  <style>
+    body {
+      background-image: url('office.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+
+    .menubar {
+      position: absolute; 
+      top: 0;
+      left: 0;
+      width: 94.5%;
+      background-color: rgba(92, 100, 102, 0.8);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #mc {
+      position: absolute;
+      z-index: 999;
+
+    }
+    #mc img {
+      height: 50vh;
+      width: auto;
+    }
+
+    /* Generic popup styling (used for instructions) */
+    .popup {
+      display: block;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 2px solid black;
+      z-index: 9999;
+    }
+    
+    .popup-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .doneDiv-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    #computer-button {
+      position: absolute;
+      top: 50vh;
+      left: 56vw;
+      z-index: 1000;
+      padding: 10px 15px;
+      font-size: 16px;
+      display: none;
+    }
+
+    /* Custom styling for the computer popup */
+    #computer-popup {
+      background-color: #4d4c4c;  /* Grey computer screen */
+      color: #030303;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #000000;
+      width: 50vw;
+      height: 60vh;
+      padding-top: 2cm;
+      padding-bottom: 2cm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+
+    #computerScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Adjust the document box so it fills the available vertical space */
+    #documentBox {
+      background-color: #ffffff;
+      width: 45%;
+      height: 95%;       /* Fill the container's content area */
+      padding: 20px;
+      overflow-y: auto;  /* Enable scrolling when content overflows */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      margin: 0 auto;    /* Center horizontally */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* Start content at top */
+      align-items: center;
+    }
+
+    /* ---------- UPDATED .page RULE BELOW ---------- */
+    .page {
+      width: 100%;
+      /* Remove height:100% so it can grow taller than its parent */
+      display: none;             
+      flex-direction: column;
+      justify-content: flex-start; /* Start at top, so overflow scrolls downward */
+      align-items: center;
+    }
+    #page1 {
+      display: flex;
+    }
+    #nextButton,#nextButton2,#nextButton3,#nextButton4,#nextButton5  {
+      align-self: flex-start;   /* push to left */
+      margin-top: auto;         /* push to bottom */
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    
+    #backButton {
+      align-self: flex-start;
+      margin-top: auto;
+      padding: 8px 12px;
+      font-size: 14px;
+      display: none; /* hidden until page2 is visible */
+    }
+    #rightText, #rightText2,#rightText3 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align left */
+  
+}
+    
+#options1, #options2,#options3 { 
+    justify-content: space-between;
+      align-items: center;
+}
+#userDisplay {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* white with 80% opacity */
+  padding: 5px;
+
+}
+
+  </style>
+</head>
+<body>
+  <div id="userDisplay">
+    <h2 id="userHeading">user</h2><button id="switchUserButton">swich User</button>
+  </div>
+
+  <div id="mc">
+    <img src="mc1.png" alt="MC Character" id="mc1" />
+  </div>
+  <!-- Opening Instructions -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h2>Instructions</h2>
+      <h3>Welcome to level 7</h3>
+      <p> in the first level you learnt about how tone can impact the bias of an article, this level takes that one step further.</p>
+      <br>
+      <p> see if you can remember where you left that article </p>
+      <button id="introPopup">Close</button>
+    </div>
+  </div>
+
+  <!-- Button on the computer (hidden until MC is close) -->
+  <button id="computer-button" >click-here</button>
+
+  <!-- Computer popup with “monitor” and menubar + document -->
+  <div id="computer-popup" style="display: none;">
+    <div class="menubar">
+      <div class="buttons">
+        <button id="closeComputerPopup">Close</button>
+        <button class="Button">edit</button>
+      </div>
+      <div class="sign">
+        <button class="button">more...</button>
+      </div>
+    </div>
+
+    <div id="computerScreen">
+      <div id="documentBox">
+        <!-- Page 1 -->
+        <div id="page1" class="page">
+          <h2>Unfinished Article</h2>
+          <p>
+            Yay, you found it! <br><br>
+            Last time we went over what bias means—here’s a quick summary in case you forgot: <br><br>
+            <strong>Bias:</strong> When news is presented in a way that favors one side or viewpoint over another. 
+          </p>
+          
+          <button id="nextButton">Next page</button>
+        </div>
+
+        <!-- Page 2 (hidden until “Next page” is clicked) -->
+        <div id="page2" class="page">
+          <h2>Unfinished Article </h2>
+          <p>
+            In news reporting, bias often falls into three general categories:<br><br>
+            <strong>Left‐leaning bias:</strong> Stories that favor progressive or liberal viewpoints. You’ll see language that emphasizes social equality, government intervention, or critiques of traditional power structures..<br><br>
+
+            <strong>Centrist-leaning bias:</strong> Articles that sit in the middle of the political spectrum—favoring neither extreme left nor extreme right. That doesn’t mean it’s free of bias; it simply means it favors moderate, middle ground policies rather than overally progressive or conservative policys .<br><br>
+
+            <strong>Right‐leaning bias:</strong> Stories that favor conservative or traditional viewpoints. You’ll notice language celebrating free markets, individual responsibility, and skepticism of large‐scale government programs. <br><br>
+            
+           go to the next page for a quiz <br><br>
+        
+          </p>
+          <button id="nextButton2">Next page</button>  <button id="backButton">Back</button> 
+        
+        </div>
+        <div id="page3" class="page">
+            <h2>Example Article</h2>
+            <h3> Can u identiy what bias this article has?</h3>
+       
+
+            <p> 
+                There are now over twice as many boat people who have arrived on our shores since 2018 (at least over 150,000) as there are UK regular forces in the British army (74,400 as of April). Three Iranian men were charged last month with spying offences, after arriving in the UK by “irregular means” including small boats and a lorry. How many extremists, or those who wish the UK harm, might be sitting in migrant hotels, plotting against innocent Brits?
+            </p>
+
+            <div id="options1"> <button id="left1"> left </button> <button id="center1"> center </button> <button id="right1"> right </button></div>
+            <p id="wrongText" style="display: none;"> wrong, try again :) </p>
+
+            <div id="rightText" style="display: none;">
+            <p > Correct, this is a snippet from the article: On illegal migration, Labour are either liars or fools (01/06/25) by the right leaning newspaper the Telegraph uk </p>
+            <br> <button id="nextButton3"> try another example </button>
+            </div>
+        
+            
+          </div>
+          <div id="page4" class="page">
+            <h2>Example Article</h2>
+            <h3> Can u identiy what bias this article has?</h3>  <h4>hint: the current uk government is left leaning</h4>
+       
+
+            <p> 
+              The Government is also investing nearly £38million to bring 319 new zero emission buses to communities across England, while nearly £1billion is being invested in England to improve bus infrastructure with new bus stops and digital timetables.
+
+Buses remain the most used form of public transport across England. 
+
+Transport Secretary Heidi Alexander said: “We’re committed to giving local leaders the power to shape the bus services their communities rely on.
+            </p>
+
+            <div id="options2"> <button id="left2"> left </button> <button id="center2"> center </button> <button id="right2"> right </button></div>
+            <p id="wrongText2" style="display: none;"> wrong, try again :) </p>
+            <div id="rightText2" style="display: none;"> 
+            <p > Correct, this is a snippet from the article: Major bus routes plan to benefit thousands of passengers in local communities (03/06/25) by the left leaning newspaper, The Mirror</p>
+            <br> <button id="nextButton4"> yay, only one more to go </button>
+          </div>
+        </div> 
+
+          <div id="page5" class="page">
+            <h2>Example Article</h2>
+            <h3> Can u identiy what bias this article has?</h3>
+       
+
+            <p> 
+              The Canadian government has proposed a bill to restrict some asylum claims and give authorities more power to halt the processing of immigration applications.
+
+Canada's immigration minister Lena Diab said the Strong Borders Act is meant to curb organised crime and the flow of illegal drugs and weapons, while boosting the "integrity" of the country's immigration system.
+
+Some advocacy groups have however criticised the new rules. The Migrant Rights Network said it would "drastically restrict refugee protections and allow for mass deportations"  
+              </p>
+
+            <div id="options3"> <button id="left3"> left </button> <button id="center3"> center </button> <button id="right3"> right </button></div>
+            <p id="wrongText3" style="display: none;"> wrong, try again :) </p>
+            <div id="rightText3" style="display: none;"> 
+            <p > Correct, this is a snippet from the article: Canada proposes sweeping immigration and security bill(04/06/25) by the center Newspaper the BBC</p>
+            <br> <button id="done" id="done"> done </button>
+          </div>
+          
+      
+      
+          </div>
+          
+  
+      </div>
+      
+    </div>
+
+    
+  </div>
+
+  <div style="display: none;" id="doneDiv" class="popup">
+    <div class="popup-content">
+      <h1>congratulations</h1>
+      <br>
+      <h3>yourve really leveled up your skills on Bias<br><br>  head to the next room to continue your jounery</h3>
+      <br>   <button id="doneButton" >Close</button> 
+    </div>
+  </div>
+  
+  <script type="module" src="java7.js"></script>
+ 
+</body>
+</html>
